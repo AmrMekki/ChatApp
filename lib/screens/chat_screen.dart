@@ -2,34 +2,33 @@ import 'package:chatapp/widgets/chat/new_message.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_core/firebase_core.dart';
 
 import 'package:chatapp/widgets/chat/messages.dart';
 
-class ChatScreen extends StatelessWidget {
+class ChatScreen extends StatefulWidget {
   const ChatScreen({Key? key}) : super(key: key);
 
-  String get name => 'foo';
+  @override
+  State<ChatScreen> createState() => _ChatScreenState();
+}
 
-  FirebaseOptions get firebaseOptions => const FirebaseOptions(
-        appId: '1:448618578101:ios:0b650370bb29e29cac3efc',
-        apiKey: 'AIzaSyAgUhHU8wSJgO5MVNy95tMT07NEjzMOfz0',
-        projectId: 'react-native-firebase-testing',
-        messagingSenderId: '448618578101',
-      );
-
-  Future<void> initializeDefault() async {
-    FirebaseApp app = await Firebase.initializeApp();
-    assert(app != null);
-    print('Initialized default app $app');
-  }
-
-  Future<void> initializeSecondary() async {
-    FirebaseApp app =
-        await Firebase.initializeApp(name: name, options: firebaseOptions);
-
-    assert(app != null);
-    print('Initialized $app');
+class _ChatScreenState extends State<ChatScreen> {
+  @override
+  void initState() {
+    super.initState();
+    final fbm = FirebaseMessaging.instance;
+    fbm.requestPermission();
+    FirebaseMessaging.onMessage.listen((message) {
+      print(message);
+      return;
+    });
+    FirebaseMessaging.onMessageOpenedApp.listen((message) {
+      print(message);
+      return;
+    });
+    fbm.subscribeToTopic('chat');
   }
 
   @override
