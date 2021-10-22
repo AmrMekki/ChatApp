@@ -11,8 +11,6 @@ class Messages extends StatelessWidget {
     int itemCount = 0;
     final user = FirebaseAuth.instance.currentUser;
     late var chatDocs;
-
-    FirebaseFirestore.instance.collection("chat").doc().id;
     FirebaseFirestore.instance
         .collection("chat")
         .orderBy("createdAt", descending: true)
